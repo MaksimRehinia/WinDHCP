@@ -472,7 +472,7 @@ namespace WinDHCP.Library
         private void DhcpRequest(DhcpMessage message)
         {
             byte[] dhcpAddress = message.GetOptionData(DhcpOption.DhcpAddress);
-            if(!dhcpAddress.Equals(this.m_DhcpInterfaceAddress))
+            if(dhcpAddress == null || !dhcpAddress.Equals(this.m_DhcpInterfaceAddress))
             {
                 return;
             }
@@ -555,7 +555,16 @@ namespace WinDHCP.Library
 
             response.AddOption(DhcpOption.DhcpMessageType, (byte)DhcpMessageType.Offer);
             response.AddOption(DhcpOption.AddressRequest, offer.Address.ToArray());
+            
+            byte[] addressLease = message.GetOptionData(DhcpOption.AddressTime);
+            if (addressLease != null && addressLease.Length != 0)
+                this.m_LeaseDuration = TimeSpan.FromSeconds(BitConverter.ToInt32(DhcpMessage.ReverseByteOrder(addressLease), 0));
+            if (this.m_LeaseDuration.TotalSeconds < 60 || this.m_LeaseDuration.CompareTo(TimeSpan.FromDays(30)) > 0)
+                this.m_LeaseDuration = TimeSpan.FromDays(1);
+
             AddDhcpOptions(response);
+
+            this.m_LeaseDuration = TimeSpan.FromDays(1);
 
             byte[] paramList = message.GetOptionData(DhcpOption.ParameterList);
             if (paramList != null)
@@ -582,7 +591,16 @@ namespace WinDHCP.Library
 
             response.AddOption(DhcpOption.DhcpMessageType, (byte)DhcpMessageType.Ack);
             response.AddOption(DhcpOption.AddressRequest, lease.Address.ToArray());
+
+            byte[] addressLease = message.GetOptionData(DhcpOption.AddressTime);
+            if (addressLease != null && addressLease.Length != 0)
+                this.m_LeaseDuration = TimeSpan.FromSeconds(BitConverter.ToInt32(DhcpMessage.ReverseByteOrder(addressLease), 0));
+            if (this.m_LeaseDuration.TotalSeconds < 60 || this.m_LeaseDuration.CompareTo(TimeSpan.FromDays(30)) > 0)
+                this.m_LeaseDuration = TimeSpan.FromDays(1);
+
             AddDhcpOptions(response);
+
+            this.m_LeaseDuration = TimeSpan.FromDays(1);
 
             this.SendReply(response);
             Trace.TraceInformation("{0} Dhcp Acknowledge Sent.", Thread.CurrentThread.ManagedThreadId);
