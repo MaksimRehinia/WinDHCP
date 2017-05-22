@@ -91,7 +91,15 @@ namespace WinDHCP
                 Console.ReadLine();
 
                 host.ManualStop();
-            }            
+            }
+            else
+            {
+                ServiceBase[] ServicesToRun;
+
+                ServicesToRun = new ServiceBase[] { new DhcpHost(server) };
+
+                ServiceBase.Run(ServicesToRun);
+            }
         }
 
         private static bool ContainsSwitch(string[] args, string switchStr)
