@@ -27,7 +27,7 @@ namespace WinDHCP
                     server.DhcpInterface = NetworkInterface.GetAllNetworkInterfaces()[dhcpConfig.NetworkInterface];
                 }
 
-                server.StartAddress = InternetAddress.Parse(dhcpConfig.StartAddress.Trim());
+                server.StartAddress = InternetAddress.Parse(dhcpConfig.StartAddress.Trim());                
                 server.EndAddress = InternetAddress.Parse(dhcpConfig.EndAddress.Trim());
                 server.Subnet = InternetAddress.Parse(dhcpConfig.Subnet.Trim());
                 server.Gateway = InternetAddress.Parse(dhcpConfig.Gateway.Trim());
@@ -44,13 +44,13 @@ namespace WinDHCP
                 {
                     if (macAllow.PhysicalAddress.Trim() == "*")
                     {
-                        server.ClearAcls();
-                        server.AllowAny = true;
+                        Acls.Clear();
+                        ReceivedMessage.AllowAny = true;
                         break;
                     }
                     else
                     {
-                        server.AddAcl(PhysicalAddress.Parse(macAllow.PhysicalAddress), false);
+                        Acls.Add(PhysicalAddress.Parse(macAllow.PhysicalAddress), false);
                     }
                 }
 
@@ -58,13 +58,13 @@ namespace WinDHCP
                 {
                     if (macDeny.PhysicalAddress.Trim() == "*")
                     {
-                        server.ClearAcls();
-                        server.AllowAny = false;
+                        Acls.Clear();
+                        ReceivedMessage.AllowAny = false;
                         break;
                     }
                     else
                     {
-                        server.AddAcl(PhysicalAddress.Parse(macDeny.PhysicalAddress), true);
+                        Acls.Add(PhysicalAddress.Parse(macDeny.PhysicalAddress), true);
                     }
                 }
 

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Acls.cs" />
     <Compile Include="AddressLease.cs" />
     <Compile Include="Configuration\DhcpServerConfigurationSection.cs" />
     <Compile Include="Configuration\InternetAddressElement.cs" />
@@ -50,10 +51,14 @@
     <Compile Include="Configuration\PhysicalAddressMappingElement.cs" />
     <Compile Include="Configuration\PhysicalAddressMappingElementCollection.cs" />
     <Compile Include="DhcpMessage.cs" />
+    <Compile Include="DhcpReceivedData.cs" />
     <Compile Include="DhcpServer.cs" />
     <Compile Include="InternetAddress.cs" />
     <Compile Include="PhysicalAddress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReceivedMessage.cs" />
+    <Compile Include="SendMessage.cs" />
+    <Compile Include="Serializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

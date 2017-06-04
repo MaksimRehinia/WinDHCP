@@ -1,68 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net;
 
 namespace WinDHCP.Library
-{
-    internal class DhcpData
-    {
-        private IPEndPoint m_Source;
-        private byte[] m_MessageBuffer;
-        private int m_BufferSize;
-        private IAsyncResult m_Result;
-
-        public IPEndPoint Source
-        {
-            get { return this.m_Source; }
-            set { this.m_Source = value; }
-        }
-
-        public byte[] MessageBuffer
-        {
-            get { return this.m_MessageBuffer; }
-            //set { this.m_MessageBuffer = value; }
-        }
-
-        public int BufferSize
-        {
-            get
-            {
-                return this.m_BufferSize;
-            }
-
-            set
-            {
-                this.m_BufferSize = value;
-
-                byte[] oldBuffer = this.m_MessageBuffer;
-                this.m_MessageBuffer = new byte[this.m_BufferSize];
-
-                int copyLen = Math.Min(oldBuffer.Length, this.m_BufferSize);
-                Array.Copy(oldBuffer, this.m_MessageBuffer, copyLen);
-            }
-        }
-
-        public IAsyncResult Result
-        {
-            get { return this.m_Result; }
-            set { this.m_Result = value; }
-        }
-
-        public DhcpData(byte[] messageBuffer)
-        {
-            this.m_MessageBuffer = messageBuffer;
-            this.m_BufferSize = messageBuffer.Length;
-        }
-
-        public DhcpData(IPEndPoint source, byte[] messageBuffer)
-        {
-            this.m_Source = source;
-            this.m_MessageBuffer = messageBuffer;
-            this.m_BufferSize = messageBuffer.Length;
-        }
-    }
-
+{    
     public enum DhcpOperation : byte
     {
         BootRequest = 0x01,
@@ -139,11 +79,6 @@ namespace WinDHCP.Library
         private Dictionary<DhcpOption, byte[]> m_Options = new Dictionary<DhcpOption, byte[]>();
 
         public DhcpMessage()
-        {
-        }
-
-        internal DhcpMessage(DhcpData data)
-            : this(data.MessageBuffer)
         {
         }
 

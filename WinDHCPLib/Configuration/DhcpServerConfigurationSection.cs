@@ -81,6 +81,7 @@ namespace WinDHCP.Library.Configuration
             get { return (InternetAddressElementCollection)this["dnsServers"]; }
         }
 
+        //initializing configuration properties with defaulf values
         protected override ConfigurationPropertyCollection Properties
         {
             get
