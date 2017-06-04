@@ -55,7 +55,7 @@ namespace WinDHCP.Library
                 {
                     lock (this.m_LeaseSync)
                     {
-                        if (!addressRequest.Equals(InternetAddress.Empty))
+                        if (!addressRequest.IsEmpty)
                         {
                             if (server.InactiveLeases.ContainsKey(addressRequest))
                             {

@@ -1,0 +1,44 @@
+{
+  "$type": "System.Collections.Generic.Dictionary`2[[WinDHCP.Library.InternetAddress, WinDHCP.Library],[WinDHCP.Library.AddressLease, WinDHCP.Library]], mscorlib",
+  "192.168.100.10": {
+    "$type": "WinDHCP.Library.AddressLease, WinDHCP.Library",
+    "m_Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "81AKjRIw"
+      }
+    },
+    "m_Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkCg=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "m_Expiration": "2017-06-04T20:35:17.4251221+03:00",
+    "m_SessionId": 1769291948,
+    "m_Acknowledged": false,
+    "Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "81AKjRIw"
+      }
+    },
+    "Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkCg=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "Expiration": "2017-06-04T20:35:17.4251221+03:00",
+    "SessionId": 1769291948,
+    "Acknowledged": false
+  }
+}

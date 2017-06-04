@@ -1,17 +1,25 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 
 namespace WinDHCP.Library
 {
+    [DataContract]
     public class PhysicalAddress : IComparable, IEquatable<PhysicalAddress>
     {
+        [DataMember]
         private byte[] m_Address = new byte[] { 0, 0, 0, 0, 0, 0 };
 
+        [DataMember]
         public byte this[int index]
         {
             get { return this.m_Address[index]; }
+        }
+
+        public PhysicalAddress()
+        {
+            
         }
 
         public PhysicalAddress(params byte[] address)
@@ -20,8 +28,10 @@ namespace WinDHCP.Library
             {
                 throw new ArgumentException("Address must have a length of 6.", "address");
             }
-
-            address.CopyTo(this.m_Address, 0);
+            else
+            {
+                address.CopyTo(this.m_Address, 0);
+            }            
         }
 
         public int CompareTo(object obj)

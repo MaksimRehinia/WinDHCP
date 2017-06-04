@@ -1,16 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Net;
 
 namespace WinDHCP.Library
 {
+    [DataContract]
     public class InternetAddress : IComparable, IEquatable<InternetAddress>
-    {
-        public static readonly InternetAddress Empty = new InternetAddress(0, 0, 0, 0);
-        public static readonly InternetAddress Broadcast = new InternetAddress(255, 255, 255, 255);
-
+    { 
+        [DataMember]
         private byte[] m_Address = new byte[] { 0, 0, 0, 0 };
+
+        public InternetAddress()
+        {
+           
+        }
 
         public InternetAddress(params byte[] address)
         {
@@ -20,21 +25,24 @@ namespace WinDHCP.Library
             }
 
             address.CopyTo(this.m_Address, 0);
-        }
+        }        
 
+        [DataMember]
         public byte this[int index]
         {
             get { return this.m_Address[index]; }
         }
 
+        [DataMember]
         public bool IsEmpty
-        {
-            get { return this.Equals(Empty); }
+        {            
+            get { return this.Equals(InternetAddress.Parse("0.0.0.0")); }
         }
 
+        [DataMember]
         public bool IsBroadcast
-        {
-            get { return this.Equals(Broadcast); }
+        {            
+            get { return this.Equals(InternetAddress.Parse("255.255.255.255")); }
         }
 
         internal InternetAddress NextAddress()

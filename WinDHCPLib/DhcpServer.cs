@@ -15,7 +15,7 @@ namespace WinDHCP.Library
         internal const int DHCPCLIENTPORT = 68;
         private const int DHCPMESSAGEMAXSIZE = 1024;
 
-        private TimeSpan m_OfferTimeout = TimeSpan.FromSeconds(30);
+        private TimeSpan m_OfferTimeout = TimeSpan.FromSeconds(60);
         private TimeSpan m_LeaseDuration = TimeSpan.FromDays(1);
 
         private Dictionary<InternetAddress, AddressLease> m_ActiveLeases = new Dictionary<InternetAddress, AddressLease>();
@@ -129,11 +129,22 @@ namespace WinDHCP.Library
             Trace.TraceInformation("Dhcp Server Starting...");
 
             this.m_ActiveLeases.Clear();
+            this.m_ActiveLeases = Serializer.RestoreActiveLeases();
+            if (m_ActiveLeases == null)
+                m_ActiveLeases = new Dictionary<InternetAddress, AddressLease>();
             this.m_InactiveLeases.Clear();
 
             for (InternetAddress address = this.m_StartAddress.Copy(); address.CompareTo(this.m_EndAddress) <= 0; address = address.NextAddress())
             {
-                this.m_InactiveLeases.Add(address, new AddressLease(null, address, DateTime.MinValue));
+                if (this.m_ActiveLeases.ContainsKey(address) && this.m_ActiveLeases[address].Expiration < DateTime.Now)
+                {
+                    this.m_ActiveLeases.Remove(address);
+                    this.m_InactiveLeases.Add(address, new AddressLease(null, address, DateTime.MinValue));
+                }
+                else if (!this.m_ActiveLeases.ContainsKey(address))
+                {
+                    this.m_InactiveLeases.Add(address, new AddressLease(null, address, DateTime.MinValue));
+                }                
             }
 
             if (this.m_DhcpInterface == null)
@@ -206,7 +217,8 @@ namespace WinDHCP.Library
                 this.m_DhcpSocket.Close();
                 this.m_DhcpSocket = null;
 
-
+                if (m_ActiveLeases != null && m_ActiveLeases.Count != 0)
+                    Serializer.SaveActiveLeases(m_ActiveLeases);
             }
             finally
             {
