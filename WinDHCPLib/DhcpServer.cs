@@ -15,7 +15,7 @@ namespace WinDHCP.Library
         internal const int DHCPCLIENTPORT = 68;
         private const int DHCPMESSAGEMAXSIZE = 1024;
 
-        private TimeSpan m_OfferTimeout = TimeSpan.FromSeconds(60);
+        private TimeSpan m_OfferTimeout = TimeSpan.FromSeconds(30);
         private TimeSpan m_LeaseDuration = TimeSpan.FromDays(1);
 
         private Dictionary<InternetAddress, AddressLease> m_ActiveLeases = new Dictionary<InternetAddress, AddressLease>();
@@ -32,7 +32,7 @@ namespace WinDHCP.Library
         private Dictionary<PhysicalAddress, InternetAddress> m_Reservations = new Dictionary<PhysicalAddress, InternetAddress>();
 
         private object m_LeaseSync = new object();        
-        private ReaderWriterLock m_AbortLock = new ReaderWriterLock();
+        private ReaderWriterLock m_AbortLock = new ReaderWriterLock();        
         private Socket m_DhcpSocket;
         private bool m_Abort = false;
 
@@ -145,32 +145,7 @@ namespace WinDHCP.Library
                 {
                     this.m_InactiveLeases.Add(address, new AddressLease(null, address, DateTime.MinValue));
                 }                
-            }
-
-            if (this.m_DhcpInterface == null)
-            {
-                Trace.TraceInformation("Enumerating Network Interfaces.");
-                foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-                {
-                    if (nic.NetworkInterfaceType == NetworkInterfaceType.Loopback)
-                    {
-                        this.m_DhcpInterface = nic;
-                    }
-                    else if ((nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet || nic.NetworkInterfaceType == NetworkInterfaceType.GigabitEthernet || nic.NetworkInterfaceType == NetworkInterfaceType.Wireless80211) && nic.OperationalStatus == OperationalStatus.Up)
-                    {
-                        Trace.TraceInformation("Using Network Interface \"{0}\".", nic.Name);
-                        this.m_DhcpInterface = nic;
-                        break;
-                    }
-                }
-
-#if TRACE
-                if (this.m_DhcpInterface.NetworkInterfaceType == NetworkInterfaceType.Loopback)
-                {
-                    Trace.TraceInformation("Active Ethernet Network Interface Not Found. Using Loopback.");
-                }
-#endif
-            }
+            }            
             
             foreach (UnicastIPAddressInformation interfaceAddress in this.m_DhcpInterface.GetIPProperties().UnicastAddresses)
             {
@@ -182,8 +157,8 @@ namespace WinDHCP.Library
 
             if (this.m_DhcpInterfaceAddress == null)
             {
-                Trace.TraceError("Unabled to Set Dhcp Interface Address. Check the networkInterface property of your config file.");
-                throw new InvalidOperationException("Unabled to Set Dhcp Interface Address.");
+                Trace.TraceError("Unable to Set Dhcp Interface Address. Check the networkInterface property of your config file.");
+                throw new InvalidOperationException("Unable to Set Dhcp Interface Address.");
             }
 
             this.m_Abort = false;
@@ -194,9 +169,8 @@ namespace WinDHCP.Library
             this.m_DhcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.m_DhcpSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
             this.m_DhcpSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, 1);
-            //this.m_DhcpSocket.Bind(new IPEndPoint(this.m_DhcpInterfaceAddress, DhcpPort));
-            //this.m_DhcpSocket.Bind(new IPEndPoint(IPAddress.Parse("192.168.100.6"), DhcpPort));
-            this.m_DhcpSocket.Bind(new IPEndPoint(IPAddress.Parse("192.168.100.6"), DHCPPORT));
+            this.m_DhcpSocket.Bind(new IPEndPoint(this.m_DhcpInterfaceAddress, DHCPPORT));
+            //this.m_DhcpSocket.Bind(new IPEndPoint(IPAddress.Parse("192.168.100.6"), DHCPPORT));
 
             this.Listen();
 
@@ -217,7 +191,9 @@ namespace WinDHCP.Library
                 this.m_DhcpSocket.Close();
                 this.m_DhcpSocket = null;
 
-                if (m_ActiveLeases != null && m_ActiveLeases.Count != 0)
+                this.m_AbortLock.AcquireWriterLock(Timeout.Infinite);
+
+                if (m_ActiveLeases != null)
                     Serializer.SaveActiveLeases(m_ActiveLeases);
             }
             finally
@@ -250,8 +226,8 @@ namespace WinDHCP.Library
         }
 
         private void CleanUp(object state)
-        {
-            lock (this.m_LeaseSync)
+        {                        
+            lock(m_LeaseSync)
             {
                 List<AddressLease> toRemove = new List<AddressLease>();
 
@@ -270,7 +246,7 @@ namespace WinDHCP.Library
                     lease.Acknowledged = false;
                     this.m_InactiveLeases.Add(lease.Address, lease);
                 }
-            }
+            }            
         }
 
         private void OnReceive(IAsyncResult result)
@@ -278,15 +254,24 @@ namespace WinDHCP.Library
             DhcpReceivedData data = new DhcpReceivedData((byte[])result.AsyncState);
             data.Result = result;
 
-            if (!this.m_Abort)
+            this.m_AbortLock.AcquireReaderLock(Timeout.Infinite);
+
+            try
             {
-                Trace.TraceInformation("Dhcp Messages Received, Queued for Processing.");
+                if (!this.m_Abort)
+                {
+                    Trace.TraceInformation("Dhcp Messages Received, Queued for Processing.");
 
-                // Queue this request for processing
-                ThreadPool.QueueUserWorkItem(new WaitCallback(this.CompleteRequest), data);
+                    // Queue this request for processing
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(this.CompleteRequest), data);
 
-                this.Listen();
+                    this.Listen();
+                }
             }
+            finally
+            {
+                this.m_AbortLock.ReleaseLock();
+            }            
         }
 
         private void CompleteRequest(object state)
@@ -316,26 +301,11 @@ namespace WinDHCP.Library
             try
             {
                 message = new DhcpMessage(messageData.MessageBuffer);
-            }
-            catch (ArgumentException ex)
-            {
-                TraceException("Error Parsing Dhcp Message", ex);
-                return;
-            }
-            catch (InvalidCastException ex)
-            {
-                TraceException("Error Parsing Dhcp Message", ex);
-                return;
-            }
-            catch (IndexOutOfRangeException ex)
-            {
-                TraceException("Error Parsing Dhcp Message", ex);
-                return;
-            }
+            }            
             catch (Exception ex)
             {
                 TraceException("Error Parsing Dhcp Message", ex);
-                throw;
+                return;
             }
 
             if (message.Operation == DhcpOperation.BootRequest)
@@ -350,14 +320,14 @@ namespace WinDHCP.Library
                     switch (messageType)
                     {
                         case DhcpMessageType.Discover:
-                            Trace.TraceInformation("{0} Dhcp DISCOVER Message Received.", Thread.CurrentThread.ManagedThreadId);
+                            Trace.TraceInformation("Dhcp DISCOVER Message Received.");
                             receivedMessage.DhcpDiscover(this, message);
-                            Trace.TraceInformation("{0} Dhcp DISCOVER Message Processed.", Thread.CurrentThread.ManagedThreadId);
+                            Trace.TraceInformation("Dhcp DISCOVER Message Processed.");
                             break;
                         case DhcpMessageType.Request:
-                            Trace.TraceInformation("{0} Dhcp REQUEST Message Received.", Thread.CurrentThread.ManagedThreadId);
+                            Trace.TraceInformation("Dhcp REQUEST Message Received.");
                             receivedMessage.DhcpRequest(this, message);
-                            Trace.TraceInformation("{0} Dhcp REQUEST Message Processed.", Thread.CurrentThread.ManagedThreadId);
+                            Trace.TraceInformation("Dhcp REQUEST Message Processed.");
                             break;
                         default:
                             Trace.TraceWarning("Unknown Dhcp Message ({0}) Received, Ignoring.", messageType.ToString());
@@ -373,7 +343,7 @@ namespace WinDHCP.Library
 
         internal static void TraceException(string prefix, Exception ex)
         {
-            Trace.TraceError("{0}: ({1}) - {2}\r\n{3}", prefix, ex.GetType().Name, ex.Message, ex.StackTrace);
+            Trace.TraceError("{0}: ({1}) - {2}\r\n", prefix, ex.GetType().Name, ex.Message);
 
             if (ex.InnerException != null)
             {

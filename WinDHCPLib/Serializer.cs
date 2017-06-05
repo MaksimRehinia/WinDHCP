@@ -17,7 +17,7 @@ namespace WinDHCP.Library
             {
                 using (StreamWriter fs = new StreamWriter("..//..//active_leases", false))
                 {
-                    if (activeLeases != null && activeLeases.Count != 0)
+                    if (activeLeases != null)
                     {
                         var tempActiveLeases = new Dictionary<string, AddressLease>();
                         foreach (var address in activeLeases.Keys)

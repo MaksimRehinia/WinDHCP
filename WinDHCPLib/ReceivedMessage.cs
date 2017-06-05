@@ -102,10 +102,11 @@ namespace WinDHCP.Library
         public void DhcpRequest(DhcpServer server, DhcpMessage message)
         {
             byte[] dhcpAddress = message.GetOptionData(DhcpOption.DhcpAddress);
-            if (dhcpAddress == null || !dhcpAddress.Equals(server.DhcpInterfaceAddress))
-            {
-                return;
-            }
+            if (dhcpAddress == null || !dhcpAddress.SequenceEqual(server.DhcpInterfaceAddress.GetAddressBytes()))
+                if (message.NextServerAddress == null || !message.NextServerAddress.SequenceEqual(server.DhcpInterfaceAddress.GetAddressBytes()))
+                {
+                    return;
+                }
 
             byte[] addressRequestData = message.GetOptionData(DhcpOption.AddressRequest);
             if (addressRequestData == null)

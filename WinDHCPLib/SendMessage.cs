@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Net;
 using System.Diagnostics;
 using System.Text;
@@ -10,11 +9,12 @@ namespace WinDHCP.Library
     {
         public static void Offer (DhcpServer server, DhcpMessage message, AddressLease offer)
         {
-            Trace.TraceInformation("{0} Sending Dhcp Offer.", Thread.CurrentThread.ManagedThreadId);
+            Trace.TraceInformation("Sending Dhcp Offer.");
 
             DhcpMessage response = new DhcpMessage();
             response.Operation = DhcpOperation.BootReply;
             response.Hardware = HardwareType.Ethernet;
+            response.NextServerAddress = server.DhcpInterfaceAddress.GetAddressBytes();
             response.HardwareAddressLength = 6;
             response.SecondsElapsed = message.SecondsElapsed;
             response.SessionId = message.SessionId;
@@ -43,12 +43,12 @@ namespace WinDHCP.Library
             }
 
             SendMessage.Reply(server, response);
-            Trace.TraceInformation("{0} Dhcp Offer Sent.", Thread.CurrentThread.ManagedThreadId);
+            Trace.TraceInformation("Dhcp Offer Sent.");
         }
 
         public static void Ack(DhcpServer server, DhcpMessage message, AddressLease lease)
         {
-            Trace.TraceInformation("{0} Sending Dhcp Acknowledge.", Thread.CurrentThread.ManagedThreadId);
+            Trace.TraceInformation("Sending Dhcp Acknowledge.");
 
             DhcpMessage response = new DhcpMessage();
             response.Operation = DhcpOperation.BootReply;
@@ -73,12 +73,12 @@ namespace WinDHCP.Library
             server.LeaseDuration = TimeSpan.FromDays(1);
 
             SendMessage.Reply(server, response);
-            Trace.TraceInformation("{0} Dhcp Acknowledge Sent.", Thread.CurrentThread.ManagedThreadId);
+            Trace.TraceInformation("Dhcp Acknowledge Sent.");
         }
 
         public static void Nak(DhcpServer server, DhcpMessage message)
         {
-            Trace.TraceInformation("{0} Sending Dhcp Negative Acknowledge.", Thread.CurrentThread.ManagedThreadId);
+            Trace.TraceInformation("Sending Dhcp Negative Acknowledge.");
 
             DhcpMessage response = new DhcpMessage();
             response.Operation = DhcpOperation.BootReply;
@@ -92,7 +92,7 @@ namespace WinDHCP.Library
             response.AddOption(DhcpOption.DhcpMessageType, (byte)DhcpMessageType.Nak);
 
             SendMessage.Reply(server, response);
-            Trace.TraceInformation("{0} Dhcp Negative Acknowledge Sent.", Thread.CurrentThread.ManagedThreadId);
+            Trace.TraceInformation("Dhcp Negative Acknowledge Sent.");
         }
 
         private static void Reply(DhcpServer server, DhcpMessage response)

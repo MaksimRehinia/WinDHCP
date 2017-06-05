@@ -91,7 +91,7 @@ namespace WinDHCP.Library.Configuration
                     this.m_Properties = new ConfigurationPropertyCollection();
 
                     //this.m_Properties.Add(new ConfigurationProperty("networkInterface", typeof(int), -1));
-                    this.m_Properties.Add(new ConfigurationProperty("networkInterface", typeof(int), 1));//Ethernet
+                    this.m_Properties.Add(new ConfigurationProperty("networkInterface", typeof(int), 4));//Ethernet
                     this.m_Properties.Add(new ConfigurationProperty("startAddress", typeof(string), "192.168.100.10", ConfigurationPropertyOptions.IsRequired));
                     this.m_Properties.Add(new ConfigurationProperty("endAddress", typeof(string), "192.168.100.150", ConfigurationPropertyOptions.IsRequired));
                     this.m_Properties.Add(new ConfigurationProperty("subnet", typeof(string), "255.255.255.0", ConfigurationPropertyOptions.IsRequired));

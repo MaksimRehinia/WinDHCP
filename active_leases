@@ -1,12 +1,12 @@
 {
-  "$type": "System.Collections.Generic.Dictionary`2[[WinDHCP.Library.InternetAddress, WinDHCP.Library],[WinDHCP.Library.AddressLease, WinDHCP.Library]], mscorlib",
+  "$type": "System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[WinDHCP.Library.AddressLease, WinDHCP.Library]], mscorlib",
   "192.168.100.10": {
     "$type": "WinDHCP.Library.AddressLease, WinDHCP.Library",
     "m_Owner": {
       "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
       "m_Address": {
         "$type": "System.Byte[], mscorlib",
-        "$value": "81AKjRIw"
+        "$value": "AAwpU1u9"
       }
     },
     "m_Address": {
@@ -18,14 +18,14 @@
       "IsEmpty": false,
       "IsBroadcast": false
     },
-    "m_Expiration": "2017-06-04T20:35:17.4251221+03:00",
-    "m_SessionId": 1769291948,
-    "m_Acknowledged": false,
+    "m_Expiration": "2017-06-06T23:38:00.1986008+03:00",
+    "m_SessionId": 141484842,
+    "m_Acknowledged": true,
     "Owner": {
       "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
       "m_Address": {
         "$type": "System.Byte[], mscorlib",
-        "$value": "81AKjRIw"
+        "$value": "AAwpU1u9"
       }
     },
     "Address": {
@@ -37,8 +37,172 @@
       "IsEmpty": false,
       "IsBroadcast": false
     },
-    "Expiration": "2017-06-04T20:35:17.4251221+03:00",
-    "SessionId": 1769291948,
-    "Acknowledged": false
+    "Expiration": "2017-06-06T23:38:00.1986008+03:00",
+    "SessionId": 141484842,
+    "Acknowledged": true
+  },
+  "192.168.100.11": {
+    "$type": "WinDHCP.Library.AddressLease, WinDHCP.Library",
+    "m_Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "AAwp+b+E"
+      }
+    },
+    "m_Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkCw=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "m_Expiration": "2017-06-06T23:41:15.5555331+03:00",
+    "m_SessionId": -2115283385,
+    "m_Acknowledged": true,
+    "Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "AAwp+b+E"
+      }
+    },
+    "Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkCw=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "Expiration": "2017-06-06T23:41:15.5555331+03:00",
+    "SessionId": -2115283385,
+    "Acknowledged": true
+  },
+  "192.168.100.12": {
+    "$type": "WinDHCP.Library.AddressLease, WinDHCP.Library",
+    "m_Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "AAwp+b+E"
+      }
+    },
+    "m_Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkDA=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "m_Expiration": "2017-06-06T23:41:15.6085362+03:00",
+    "m_SessionId": 631362422,
+    "m_Acknowledged": true,
+    "Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "AAwp+b+E"
+      }
+    },
+    "Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkDA=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "Expiration": "2017-06-06T23:41:15.6085362+03:00",
+    "SessionId": 631362422,
+    "Acknowledged": true
+  },
+  "192.168.100.13": {
+    "$type": "WinDHCP.Library.AddressLease, WinDHCP.Library",
+    "m_Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "AAwp+b+E"
+      }
+    },
+    "m_Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkDQ=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "m_Expiration": "2017-06-06T23:41:15.8905523+03:00",
+    "m_SessionId": 870374704,
+    "m_Acknowledged": true,
+    "Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "AAwp+b+E"
+      }
+    },
+    "Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkDQ=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "Expiration": "2017-06-06T23:41:15.8905523+03:00",
+    "SessionId": 870374704,
+    "Acknowledged": true
+  },
+  "192.168.100.14": {
+    "$type": "WinDHCP.Library.AddressLease, WinDHCP.Library",
+    "m_Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "AAwp+b+E"
+      }
+    },
+    "m_Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkDg=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "m_Expiration": "2017-06-06T23:41:16.1085648+03:00",
+    "m_SessionId": -688944288,
+    "m_Acknowledged": true,
+    "Owner": {
+      "$type": "WinDHCP.Library.PhysicalAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "AAwp+b+E"
+      }
+    },
+    "Address": {
+      "$type": "WinDHCP.Library.InternetAddress, WinDHCP.Library",
+      "m_Address": {
+        "$type": "System.Byte[], mscorlib",
+        "$value": "wKhkDg=="
+      },
+      "IsEmpty": false,
+      "IsBroadcast": false
+    },
+    "Expiration": "2017-06-06T23:41:16.1085648+03:00",
+    "SessionId": -688944288,
+    "Acknowledged": true
   }
 }
